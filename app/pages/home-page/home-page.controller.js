@@ -5,6 +5,8 @@ angular
 function homePageController(Employees) {
   const homePageVm = this;
   homePageVm.employees = [];
+  homePageVm.searchValue = '';
+  homePageVm.handleSearchEvent = function (value) { homePageVm.searchValue = value; };
 
   activate();
 
@@ -15,3 +17,6 @@ function homePageController(Employees) {
       });
   }
 }
+window.addEventListener('load', () => {
+  window.history.pushState({}, '', '');
+});
