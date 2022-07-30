@@ -7,6 +7,7 @@ import PerformancePageComponent from './pages/performance-page.vue';
 import PerformanceChartComponent from './components/vue-components/performance-chart.vue';
 import SearchBarComponent from './components/vue-components/search-bar.vue';
 import DateRangeComponent from './components/vue-components/date-range.vue';
+import NotFoundPageComponent from './pages/not-found-page.vue';
 angular.module('appModule', [
   'ui.router',
   'ngVue',
@@ -25,4 +26,7 @@ angular.module('appModule').directive('vSearchBar', (createVueComponent) => {
 });
 angular.module('appModule').directive('vDateRange', (createVueComponent) => {
   return createVueComponent(Vue.component('dateRangeComponent', DateRangeComponent));
+});
+angular.module('appModule').directive('vNotFoundPage', (createVueComponent) => {
+  return createVueComponent(Vue.component('notFoundPageComponent', NotFoundPageComponent));
 });
