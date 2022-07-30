@@ -22,7 +22,6 @@ function homePageController(Employees) {
     homePageVm.loading = true;
     Employees.loadMoreEmployees()
       .then(({ data }) => {
-        console.log(data);
         if (!data.error) {
           homePageVm.employees = homePageVm.employees.concat(data.employees);
         } else {

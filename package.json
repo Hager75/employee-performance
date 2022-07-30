@@ -43,7 +43,9 @@
   },
   "scripts": {
     "start": "webpack-dev-server --open --progress",
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack --config=webpack.config.js"
+
 
   }
 }
