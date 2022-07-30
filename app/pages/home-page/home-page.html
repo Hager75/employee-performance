@@ -4,9 +4,9 @@
   </div>
 
   <employees-list employees-list="homePageVm.employees" value="homePageVm.searchValue"></employees-list>
-
+  <div ng-class="{loader:homePageVm.loading}"></div>
   <div class="c-dashboard__footer">
-    <button class="c-button">
+    <button class="c-button" ng-class="{disabled:homePageVm.loading,dnone:homePageVm.hideButton}" ng-disabled="homePageVm.loading" ng-click="homePageVm.loadMore()">
       Load More
     </button>
   </div>
