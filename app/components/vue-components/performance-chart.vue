@@ -1,6 +1,24 @@
 <template>
   <div class="c-chart__container">
     <v-chart ref="chart" :option="chartOptions" />
+    <div v-if="performanceDateRangePoints.length > 0">
+        <h3 class="result-header">result for filteration</h3>
+      <div
+        v-for="performanceDateRangePoint in performanceDateRangePoints"
+        :key="performanceDateRangePoint.date"
+      >
+        <div class="result-wrapper">
+          <div class="result__date">
+            <h4>Date: </h4>
+            {{ performanceDateRangePoint.date }}
+          </div>
+          <div class="result__date">
+            <h4>Performance: </h4>
+            {{ performanceDateRangePoint.performance }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -16,6 +34,7 @@ import {
   VisualMapComponent,
 } from "echarts/components";
 import VChart from "vue-echarts";
+import store from "../../services/store";
 
 use([
   CanvasRenderer,
@@ -32,39 +51,16 @@ export default {
   components: {
     VChart,
   },
-
+  props: {
+    startDate: String,
+    endDate: String,
+  },
   data() {
     return {
-      chartData: [
-        {
-          date_ms: 1641772800000,
-          performance: 0.2,
-        },
-        {
-          date_ms: 1641859200000,
-          performance: 0.33,
-        },
-        {
-          date_ms: 1641945600000,
-          performance: 0.53,
-        },
-        {
-          date_ms: 1642032000000,
-          performance: 0.31,
-        },
-        {
-          date_ms: 1642118400000,
-          performance: 0.65,
-        },
-        {
-          date_ms: 1642204800000,
-          performance: 0.88,
-        },
-        {
-          date_ms: 1642291200000,
-          performance: 0.07,
-        },
-      ],
+      dates: [],
+      datesChartData: [],
+      performanceChartData: [],
+      performanceDateRangePoints: [],
     };
   },
 
@@ -83,7 +79,7 @@ export default {
           left: "center",
         },
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           transitionDuration: 0,
           confine: false,
           hideDelay: 0,
@@ -131,17 +127,69 @@ export default {
     },
 
     xAxisData() {
-      return this.chartData.map((item) => this.formatDate(item.date_ms));
+      this.datesChartData = store.getters["chartData"].map((item) =>
+        this.formatDate(item.date_ms)
+      );
+      return [...this.datesChartData];
     },
 
     yAxisData() {
-      return this.chartData.map((item) => +item.performance * 100);
+      this.performanceChartData = store.getters["chartData"].map(
+        (item) => +item.performance * 100
+      );
+      return store.getters["chartData"].map((item) => +item.performance * 100);
+    },
+    receivedChartData() {
+      return store.getters["chartData"];
     },
   },
 
   methods: {
     formatDate(dateInMs) {
       return moment(dateInMs).format("DD MMM YYYY");
+    },
+    getDatesInRange(startDate, endDate) {
+      this.dates = [];
+      let formatStartDate = moment(startDate);
+      let formatEndDate = moment(endDate);
+      while (formatStartDate <= formatEndDate) {
+        this.dates.push(moment(formatStartDate).format("DD MMM YYYY"));
+        formatStartDate = moment(formatStartDate).add(1, "days");
+      }
+      this.getPointsPerformance();
+      return this.dates;
+    },
+    getPointsPerformance() {
+      this.performanceDateRangePoints = [];
+      this.datesChartData.map((dateChart) => {
+        this.dates.filter((dateRange) => {
+          if (dateRange == dateChart) {
+            let indexDate = this.datesChartData.indexOf(dateRange);
+            this.performanceDateRangePoints = [
+              ...this.performanceDateRangePoints,
+              {
+                performance: this.performanceChartData[indexDate],
+                date: dateChart,
+              },
+            ];
+          }
+        });
+      });
+    },
+  },
+  mounted() {
+    store.dispatch("loadChartData");
+  },
+  watch: {
+    startDate() {
+      if (this.endDate && this.startDate) {
+        this.getDatesInRange(this.startDate, this.endDate);
+      }
+    },
+    endDate() {
+      if (this.endDate && this.startDate) {
+        this.getDatesInRange(this.startDate, this.endDate);
+      }
     },
   },
 };

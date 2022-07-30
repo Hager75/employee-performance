@@ -7,6 +7,7 @@
 <script>
 export default {
   name: "SearchBarComponent",
+  emit:['search-value'],
     data() {
     return {
         searchValue:'',
