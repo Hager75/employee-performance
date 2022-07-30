@@ -6,6 +6,7 @@ import 'angular-sanitize/angular-sanitize.js';
 import PerformancePageComponent from './pages/performance-page.vue';
 import PerformanceChartComponent from './components/vue-components/performance-chart.vue';
 import SearchBarComponent from './components/vue-components/search-bar.vue';
+import DateRangeComponent from './components/vue-components/date-range.vue';
 angular.module('appModule', [
   'ui.router',
   'ngVue',
@@ -21,4 +22,7 @@ angular.module('appModule').directive('vPerformanceChart', (createVueComponent) 
 });
 angular.module('appModule').directive('vSearchBar', (createVueComponent) => {
   return createVueComponent(Vue.component('searchBarComponent', SearchBarComponent));
+});
+angular.module('appModule').directive('vDateRange', (createVueComponent) => {
+  return createVueComponent(Vue.component('dateRangeComponent', DateRangeComponent));
 });
