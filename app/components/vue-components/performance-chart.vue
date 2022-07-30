@@ -123,6 +123,30 @@ export default {
             },
           },
         ],
+                visualMap: {
+          top: 50,
+          right: 10,
+          pieces: [
+            {
+              gt: 0,
+              lte: 50,
+              color: "#FC7D02",
+            },
+            {
+              gt: 50,
+              lte: 80,
+              color: "#FBDB0F",
+            },
+            {
+              gt: 80,
+              lte: 100,
+              color: "#93CE07",
+            },
+          ],
+          outOfRange: {
+            color: "#999",
+          },
+        },
       };
     },
 
